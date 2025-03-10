@@ -3,6 +3,7 @@
         TABLE: '.leistung-table',
         ITEMS: '.leistung-item',
         RESULT_CONTAINER: '.result-container',
+        ACCORDION_TOGGLE: '.Accordion__Toggle'
     };
 
     const STYLES = {
@@ -19,20 +20,25 @@
     };
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initObserver);
+        document.addEventListener('DOMContentLoaded', init);
     } else {
-        initObserver();
+        init();
     }
 
-    function initObserver() {
+    function init() {
+        processGradesTable();
+
+        observeDOM();
+        observeAccordion();
+    }
+
+    function observeDOM() {
         const observer = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
                 if (mutation.addedNodes.length) {
                     const table = document.querySelector(SELECTORS.TABLE);
                     if (table) {
-                        observer.disconnect();
                         processGradesTable();
-                        return;
                     }
                 }
             }
@@ -44,16 +50,36 @@
             attributes: false,
             characterData: false
         });
+    }
 
-        const table = document.querySelector(SELECTORS.TABLE);
-        if (table) {
-            observer.disconnect();
-            processGradesTable();
-        }
+    function observeAccordion() {
+        document.body.addEventListener('click', (event) => {
+            const toggleButton = event.target.closest(SELECTORS.ACCORDION_TOGGLE);
+            if (toggleButton) {
+                setTimeout(processGradesTable, 300);
+            }
+        });
+
+        const attributeObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'aria-expanded') {
+                    setTimeout(processGradesTable, 300);
+                }
+            }
+        });
+
+        document.querySelectorAll(SELECTORS.ACCORDION_TOGGLE).forEach(toggle => {
+            attributeObserver.observe(toggle, { attributes: true });
+        });
     }
 
     function processGradesTable() {
         try {
+            const table = document.querySelector(SELECTORS.TABLE);
+            if (!table) {
+                return;
+            }
+
             const stats = calculateStats();
             if (stats) {
                 displayResults(stats);
