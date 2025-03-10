@@ -1,12 +1,9 @@
 function observeDOM() {
-    console.log('Starting DOM observation...');
-    
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (mutation.addedNodes.length) {
                 const table = document.querySelector('.leistung-table');
                 if (table) {
-                    console.log('Table found after dynamic load!');
                     observer.disconnect();
                     calculateAverage();
                 }
@@ -21,17 +18,13 @@ function observeDOM() {
 }
 
 function calculateAverage() {
-    console.log('Calculating average...');
-    
     const table = document.querySelector('.leistung-table');
     if (!table) {
-        console.log('Table not found');
+        console.error('Table not found');
         return;
     }
-    console.log('Found table:', table);
     
     const leistungItems = table.querySelectorAll('.leistung-item');
-    console.log('Number of leistung items:', leistungItems.length);
     
     let totalGrade = 0;
     let totalECTS = 0;
@@ -41,24 +34,15 @@ function calculateAverage() {
     if (leistungItems.length > 0) {
         Array.from(leistungItems).forEach((item, index) => {
             const cells = item.getElementsByTagName('td');
-            console.log(`Processing row ${index}, cells:`, cells.length);
             
             if (cells.length >= 10) {
                 const ects = parseFloat(cells[7].textContent);
                 const grade = parseFloat(cells[10].textContent);
                 
-                console.log(`Row ${index} data:`, {
-                    rawECTS: cells[7].textContent,
-                    rawGrade: cells[10].textContent,
-                    parsedECTS: ects,
-                    parsedGrade: grade
-                });
-                
                 if (!isNaN(ects) && !isNaN(grade) && grade < 5) {
                     totalGrade += grade * ects;
                     totalECTS += ects;
                     totalCourses += 1;
-                    console.log(`Added grade: ${grade}, ECTS: ${ects}`);
                 } else if (!isNaN(ects) && !isNaN(grade) && grade === 5) {
                     failedAttempts += 1;
                 }
@@ -67,19 +51,16 @@ function calculateAverage() {
     }
 
     if (totalECTS === 0) {
-        console.log('No valid grades found');
+        console.error('No valid grades found');
         return;
     }
 
     const average = totalGrade / totalECTS;
-    console.log(`RESULT - Average: ${average}, Total ECTS: ${totalECTS}`);
 
     displayResult(average.toFixed(2), totalECTS, totalCourses, failedAttempts);
 }
 
 function displayResult(average, ects, totalCourses, failedAttempts) {
-    console.log('Displaying result');
-
     let resultContainer = document.querySelector('.result-container');
     if (!resultContainer) {
         resultContainer = document.createElement('div');
@@ -95,7 +76,6 @@ function displayResult(average, ects, totalCourses, failedAttempts) {
 
         const averageDiv = document.createElement('div');
         averageDiv.style.fontWeight = '600';
-        // averageDiv.style.color = '#0063a6';
         averageDiv.innerHTML = `Average: <span style="font-weight: 600; color: #0063a6;">${average}</span>`;
 
         const ectsDiv = document.createElement('div');
