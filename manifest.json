@@ -1,13 +1,20 @@
 {
-    "manifest_version": 3,
-    "name": "u:space Grades Calculator",
-    "version": "1.0",
-    "description": "Automatically calculates the average grade and other stats on the u:space examination results page",
-    "permissions": ["activeTab"],
-    "content_scripts": [
-      {
-        "matches": ["*://uspace.univie.ac.at/web/studium/pruefungsleistungen/*"],
-        "js": ["content.js"]
-      }
-    ]
-  }
+  "manifest_version": 3,
+  "name": "u:space Grades Calculator",
+  "version": "1.0",
+  "description": "This extension calculates and displays the average grade and other stats to the u:space examination results page.",
+  "permissions": [
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://uspace.univie.ac.at/web/studium/pruefungsleistungen/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
