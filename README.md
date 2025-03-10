@@ -17,3 +17,6 @@ This extension calculates and displays the average grade and other stats to the 
 3. Enable **Developer mode** by toggling the switch in the top right corner.
 
 4. Click on **Load unpacked** and select the folder where the repository was cloned or extracted.
+
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) file for details.
