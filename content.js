@@ -37,9 +37,10 @@
             for (const mutation of mutations) {
                 if (mutation.addedNodes.length) {
                     const table = document.querySelector(SELECTORS.TABLE);
-                    observer.disconnect();
                     if (table) {
+                        observer.disconnect();
                         processGradesTable();
+                        return;
                     }
                 }
             }
